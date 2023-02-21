@@ -1,0 +1,1 @@
+rootProject.name = "app.netlify.cazterk.meetup-ktor-backend"
