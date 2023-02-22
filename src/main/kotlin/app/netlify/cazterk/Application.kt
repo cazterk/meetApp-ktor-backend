@@ -4,6 +4,9 @@ import app.netlify.cazterk.data.user.MongoUserDataSource
 import app.netlify.cazterk.data.user.User
 import io.ktor.server.application.*
 import app.netlify.cazterk.plugins.*
+import app.netlify.cazterk.security.hashing.SH256HashingService
+import app.netlify.cazterk.security.token.JwtTokenService
+import app.netlify.cazterk.security.token.TokenConfig
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.litote.kmongo.coroutine.coroutine
@@ -22,11 +25,17 @@ fun Application.module() {
     ).coroutine.getDatabase(dbName)
 
     val userDatabase = MongoUserDataSource(db)
-
-
+    val tokenService = JwtTokenService()
+    val tokenConfig = TokenConfig(
+        issuer = environment.config.property("jwt.issuer").getString(),
+        audience = environment.config.property("jwt.audience").getString(),
+        expiresIn = 365L * 1000L * 60L * 60L * 24L,
+        secret = System.getenv("JWT_SECRET")
+    )
+    val hashingService = SH256HashingService()
 
     configureSerialization()
     configureMonitoring()
-    configureSecurity()
-    configureRouting()
+    configureSecurity(tokenConfig)
+    configureRouting(userDatabase, hashingService, tokenService, tokenConfig)
 }

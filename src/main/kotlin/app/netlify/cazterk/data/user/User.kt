@@ -10,6 +10,4 @@ data class User(
     val lastName: String,
     val salt: String,
     @BsonId val id: ObjectId = ObjectId()
-) {
-
-}
+)
