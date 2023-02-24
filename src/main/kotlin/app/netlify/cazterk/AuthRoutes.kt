@@ -1,6 +1,6 @@
 package app.netlify.cazterk
 
-import app.netlify.cazterk.authenticate
+
 import app.netlify.cazterk.data.user.User
 import app.netlify.cazterk.data.user.UserDataSource
 import app.netlify.cazterk.data.user.requests.AuthRequest
@@ -12,7 +12,6 @@ import app.netlify.cazterk.security.token.TokenClaim
 import app.netlify.cazterk.security.token.TokenConfig
 import app.netlify.cazterk.security.token.TokenService
 import io.ktor.http.*
-import io.ktor.http.ContentType.Message.Http
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
@@ -106,21 +105,22 @@ fun Route.signIn(
     }
 }
 
-fun Route.authenticate(){
-    authenticate{
-        get("authenticate"){
+fun Route.authenticate() {
+    authenticate {
+        get("authenticate") {
             call.respond(HttpStatusCode.OK)
         }
     }
 
 }
 
-fun Route.getSecretInfo(){
-    authenticate{
-        get("secret"){
+fun Route.getSecretInfo() {
+    authenticate {
+        get("secret") {
             val principal = call.principal<JWTPrincipal>()
-            val userId = principal?.getClaim("userId", String::class)
-            call .respond(HttpStatusCode.OK, "Your user id is $userId")
+            val userId = principal?.payload?.getClaim("userId")
+            val expiresAt = principal?.expiresAt?.time?.minus(System.currentTimeMillis())
+            call.respond(HttpStatusCode.OK, "Your userId is $userId token expires at $expiresAt")
         }
     }
 }

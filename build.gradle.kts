@@ -5,6 +5,7 @@ val kmongo_version: String by project
 val commons_codec_version: String by project
 
 plugins {
+    application
     kotlin("jvm") version "1.8.10"
     id("io.ktor.plugin") version "2.2.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
@@ -23,6 +24,8 @@ repositories {
     mavenCentral()
 }
 
+val sshAntTask = configurations.create("sshAntTask")
+
 dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
@@ -33,7 +36,8 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-config-yaml:$ktor_version")
-
+    implementation("io.ktor:ktor-server-auth:$ktor_version")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
 // mongo dependencies
     implementation("org.litote.kmongo:kmongo:$kmongo_version")
     implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")
@@ -41,8 +45,10 @@ dependencies {
     implementation("commons-codec:commons-codec:$commons_codec_version")
     implementation("org.litote.kmongo:kmongo-reactor:$kmongo_version")
 
+
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
+    sshAntTask("org.apache.ant:ant-jsch:1.10.12")
 
 }
