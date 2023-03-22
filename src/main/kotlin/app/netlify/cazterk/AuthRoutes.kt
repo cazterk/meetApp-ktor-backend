@@ -6,6 +6,7 @@ import app.netlify.cazterk.data.user.UserDataSource
 import app.netlify.cazterk.data.user.requests.AuthRequest
 import app.netlify.cazterk.data.user.requests.LoginRequest
 import app.netlify.cazterk.data.user.responses.AuthResponse
+import app.netlify.cazterk.data.user.responses.toDto
 import app.netlify.cazterk.security.hashing.HashingService
 import app.netlify.cazterk.security.hashing.SaltedHash
 import app.netlify.cazterk.security.token.TokenClaim
@@ -114,14 +115,20 @@ fun Route.authenticate() {
 
 }
 
-fun Route.getSecretInfo() {
+fun Route.getSecretInfo(userDataSource: UserDataSource) {
     authenticate {
         get("secret") {
             val principal = call.principal<JWTPrincipal>()
-            val userId = principal?.payload?.getClaim("userId")
-            val expiresAt = principal?.expiresAt?.time?.minus(System.currentTimeMillis())
-            call.respond(HttpStatusCode.OK, "Your userId is $userId token expires at $expiresAt")
+            val userId = principal?.payload?.getClaim("userId").toString().removeSurrounding("\"")
+            val user = userDataSource.getUserById(userId)
+            user
+                ?.let { foundUser ->
+                    call.respond(foundUser.toDto())
+                }
+                ?: call.respond(HttpStatusCode.NotFound, "No user with that id $userId was found")
+
         }
+
     }
 }
 
