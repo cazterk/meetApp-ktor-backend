@@ -7,7 +7,6 @@ import app.netlify.cazterk.security.hashing.HashingService
 import app.netlify.cazterk.security.token.TokenConfig
 import app.netlify.cazterk.security.token.TokenService
 import io.ktor.server.routing.*
-import io.ktor.server.response.*
 import io.ktor.server.application.*
 
 fun Application.configureRouting(
