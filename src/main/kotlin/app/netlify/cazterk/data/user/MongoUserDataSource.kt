@@ -24,4 +24,8 @@ class MongoUserDataSource(
         return users
             .findOne(User::id eq bsonId)
     }
+
+    override suspend fun getUsers(): List<User> {
+        return users.find().toList()
+    }
 }

@@ -3,6 +3,7 @@ package app.netlify.cazterk.plugins
 import app.netlify.cazterk.*
 import app.netlify.cazterk.data.user.UserDataSource
 import app.netlify.cazterk.routes.getUserById
+import app.netlify.cazterk.routes.getUsers
 import app.netlify.cazterk.security.hashing.HashingService
 import app.netlify.cazterk.security.token.TokenConfig
 import app.netlify.cazterk.security.token.TokenService
@@ -21,5 +22,6 @@ fun Application.configureRouting(
         authenticate()
         getSecretInfo(userDataSource)
         getUserById(userDataSource)
+        getUsers(userDataSource)
     }
 }
