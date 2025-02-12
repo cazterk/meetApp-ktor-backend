@@ -6,9 +6,10 @@ val commons_codec_version: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "2.1.10"
     id("io.ktor.plugin") version "2.2.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
+
 }
 
 group = "app.netlify.cazterk"
@@ -21,6 +22,7 @@ application {
 }
 
 repositories {
+
     mavenCentral()
 }
 
@@ -52,3 +54,4 @@ dependencies {
     sshAntTask("org.apache.ant:ant-jsch:1.10.12")
 
 }
+
