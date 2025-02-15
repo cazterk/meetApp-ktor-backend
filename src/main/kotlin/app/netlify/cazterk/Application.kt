@@ -18,7 +18,7 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
-    val mongoPassword = System.getenv("MONGO_PASSWORD")
+    val mongoPassword = System.getenv("MONGO_PASSWORD")//?: throw IllegalArgumentException("MONGO_PASSWORD not set")
     val dbName = "meetapp-db"
     val db = KMongo.createClient(
         connectionString = "mongodb+srv://cazterk:$mongoPassword@cluster0.zlbzxw2.mongodb.net/$dbName?retryWrites=true&w=majority"
@@ -30,7 +30,7 @@ fun Application.module() {
         issuer = environment.config.property("jwt.issuer").getString(),
         audience = environment.config.property("jwt.audience").getString(),
         expiresIn = 365L * 1000L * 60L * 60L * 24L,
-        secret = System.getenv("JWT_SECRET")
+        secret = System.getenv("JWT_SECRET")//?: throw IllegalArgumentException("JWT_SECRET not set")
     )
     val hashingService = SH256HashingService()
 
